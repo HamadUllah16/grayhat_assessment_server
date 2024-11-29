@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
-const JobPosterSchema = mongoose.Schema({
+const JobSchema = new mongoose.Schema({
+    poster: {
+        type: String,
+        unique: true,
+        required: true
+    },
     title: {
         type: String,
         required: true
@@ -18,7 +23,9 @@ const JobPosterSchema = mongoose.Schema({
         required: true
     },
     appliedCandidates: {
+        type: Array,
+        default: []
     }
-})
+}, { timestamps: true });
 
-module.exports = mongoose.model('JobPoster', JobPosterSchema);
+module.exports = mongoose.model('Job', JobSchema);

@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors')
 const connectDatabase = require('./config/database')
+const jobRoutes = require('./routes/jobRoutes');
 require('dotenv').config();
 
 // middlewares
@@ -12,12 +13,20 @@ app.use(cors({
 
 
 // database connection
-const conn = connectDatabase();
+connectDatabase().then((message) => {
 
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Server Up', conn })
-})
+    // job routes
+    app.use('/api/job', jobRoutes)
 
-app.listen((process.env.PORT), () => {
-    console.log(`Server Listening to Port: ${process.env.PORT}`)
+    app.get('/', (req, res) => {
+        res.status(200).json({ message: 'Server Up', database: message })
+    })
+
+    app.listen((process.env.PORT), () => {
+        console.log(`Server Listening to Port: ${process.env.PORT}`)
+    })
+
+}).catch((err) => {
+    console.error(err);
+    return err;
 })
